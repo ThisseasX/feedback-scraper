@@ -1,0 +1,4 @@
+node_modules
+feedbacks/**
+!feedbacks/stub.html
+report.txt
