@@ -31,7 +31,7 @@ const feedbacksParsed = feedbacks.map((feedback, index) => {
     content: parsedFeedback,
   } = parseFeedback(path);
 
-  const seniorityNormalized = /[a-zA-Z]+/.exec(seniority)?.[0];
+  const seniorityNormalized = /(?<=- ).+/.exec(seniority)?.[0];
   const relationshipNormalized = /[a-zA-Z]+/.exec(relationship)?.[0];
 
   const internalInfo = chapter ? `${seniorityNormalized} (${chapter})` : '';
