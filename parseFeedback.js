@@ -13,6 +13,11 @@ const OVERALL_NOTES_LABEL_SELECTOR =
   '.kn-form-group:last-of-type .kn-input-paragraph_text:first-of-type label.kn-label';
 const OVERALL_NOTES_SELECTOR =
   '.kn-form-group:last-of-type .kn-input-paragraph_text:first-of-type';
+const SENIORITY_SELECTOR = '.kn-detail.field_4125 .kn-detail-body';
+const CHAPTER_SELECTOR = '.kn-detail.field_4127 .kn-detail-body';
+const RELATIONSHIP_SELECTOR = '.kn-detail.field_4053 .kn-detail-body';
+const EXTERNAL_RELATIONSHIP_SELECTOR = '.kn-detail.field_4054 .kn-detail-body';
+const EXTERNAL_NAME_SELECTOR = '.kn-detail.field_944 .kn-detail-body';
 
 const parseFeedback = (path) => {
   const feedback = readFileSync(path, 'utf8');
@@ -23,6 +28,21 @@ const parseFeedback = (path) => {
   $('*[style*="visibility: hidden"]').remove();
   $('*[style*="opacity: 0"]').remove();
 
+  // Get reviewer metadata
+  const seniority = $(SENIORITY_SELECTOR).text();
+  const chapter = $(CHAPTER_SELECTOR).text();
+  const relationship =
+    $(RELATIONSHIP_SELECTOR).text() || $(EXTERNAL_RELATIONSHIP_SELECTOR).text();
+  const externalName = $(EXTERNAL_NAME_SELECTOR).text();
+
+  const metadata = {
+    seniority,
+    chapter,
+    relationship,
+    externalName,
+  };
+
+  // Parse each category
   const categories = $(CATEGORIES_SELECTOR)
     .map((i, el) => {
       const label = $(LABEL_SELECTOR, el).text();
@@ -82,7 +102,10 @@ const parseFeedback = (path) => {
     .trim()
     .replace(/\s+/g, ' ');
 
-  return [categoriesText, `Overall Notes: ${overallNotes}`].join('\n\n');
+  return {
+    metadata,
+    content: [categoriesText, `Overall Notes: ${overallNotes}`].join('\n\n'),
+  };
 };
 
 module.exports = parseFeedback;
